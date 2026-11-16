@@ -90,13 +90,13 @@ function Dashboard() {
           <div className="grid gap-6 lg:grid-cols-3">
             <div className="h-[420px] lg:col-span-2">
               <ResponsiveContainer>
-                <BarChart data={models} layout="vertical" margin={{ left: 30 }}>
+                <BarChart data={models.slice(0, 10)} layout="vertical" margin={{ left: 30 }}>
                   <CartesianGrid horizontal={false} stroke="var(--border)" />
                   <XAxis type="number" tickFormatter={usdK} stroke="var(--muted-foreground)" fontSize={12} />
-                  <YAxis type="category" dataKey="name" width={110} stroke="var(--muted-foreground)" fontSize={12} />
+                  <YAxis type="category" dataKey="name" interval={0} width={120} stroke="var(--muted-foreground)" fontSize={12} />
                   <Tooltip {...tip} formatter={(v: number) => usd(v)} />
                   <Bar dataKey="receita" name="Receita" radius={[0, 3, 3, 0]}>
-                    {models.map((_, i) => <Cell key={i} fill={i === 0 ? "var(--p-red)" : "var(--muted-foreground)"} />)}
+                    {models.slice(0, 10).map((_, i) => <Cell key={i} fill={i === 0 ? "var(--p-red)" : "var(--muted-foreground)"} />)}
                   </Bar>
                 </BarChart>
               </ResponsiveContainer>
@@ -154,7 +154,7 @@ function Dashboard() {
                 <BarChart data={[...pays].sort((a, b) => b.ticket - a.ticket)} layout="vertical" margin={{ left: 20 }}>
                   <CartesianGrid horizontal={false} stroke="var(--border)" />
                   <XAxis type="number" tickFormatter={usdK} stroke="var(--muted-foreground)" fontSize={12} />
-                  <YAxis type="category" dataKey="name" width={110} stroke="var(--muted-foreground)" fontSize={12} />
+                  <YAxis type="category" dataKey="name" interval={0} width={120} stroke="var(--muted-foreground)" fontSize={12} />
                   <Tooltip {...tip} formatter={(v: number) => usd(v)} />
                   <Bar dataKey="ticket" name="Ticket médio" fill="var(--p-gold)" radius={[0, 3, 3, 0]} />
                 </BarChart>
