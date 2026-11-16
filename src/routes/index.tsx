@@ -136,8 +136,9 @@ function Dashboard() {
         <Panel n="03" q="Qual é a forma de pagamento preferida e como ela impacta o valor da venda?"
           a={pays[0] ? `${pays[0].name} é a preferida (${((pays[0].qtd / rows.length) * 100).toFixed(0)}% das vendas). Maior ticket: ${[...pays].sort((a, b) => b.ticket - a.ticket)[0]?.name}.` : "Sem dados."}>
           <div className="grid gap-6 lg:grid-cols-2">
-            <div className="h-[340px]">
-              <ResponsiveContainer>
+            <div className="min-w-0 space-y-4">
+              <div className="h-[340px]">
+              <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie data={pays} dataKey="qtd" nameKey="name" innerRadius={75} outerRadius={125} paddingAngle={2} stroke="var(--background)">
                     {pays.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
@@ -145,8 +146,9 @@ function Dashboard() {
                   <Tooltip {...tip} formatter={(v: number) => `${v} vendas (${((v / rows.length) * 100).toFixed(0)}%)`} />
                 </PieChart>
               </ResponsiveContainer>
+              </div>
               <div className="flex flex-wrap justify-center gap-3 text-xs text-muted-foreground">
-                {pays.map((p, i) => <span key={p.name} className="flex items-center gap-1"><span className="h-2 w-2 rounded-full" style={{ background: COLORS[i % COLORS.length] }} />{p.name}</span>)}
+                {pays.map((p, i) => <span key={p.name} className="flex items-center gap-1 whitespace-nowrap"><span className="h-2 w-2 shrink-0 rounded-full" style={{ background: COLORS[i % COLORS.length] }} />{p.name}</span>)}
               </div>
             </div>
             <div className="h-[340px]">
