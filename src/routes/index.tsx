@@ -86,7 +86,7 @@ function Dashboard() {
         </section>
 
         <Panel n="01" q="Qual modelo gera a maior receita e qual tem o maior ticket médio?"
-          a={models[0] ? `${models[0].name} lidera em receita (${usd(models[0].receita)}); ${topTicket.name} tem o maior ticket médio (${usd(topTicket.ticket)}).` : "Sem dados."}>
+          a={models[0] && topTicket ? `${models[0].name} lidera em receita (${usd(models[0].receita)}); ${topTicket.name} tem o maior ticket médio (${usd(topTicket.ticket)}).` : "Sem dados."}>
           <div className="grid gap-6 lg:grid-cols-3">
             <div className="h-[420px] lg:col-span-2">
               <ResponsiveContainer>
@@ -126,7 +126,7 @@ function Dashboard() {
               {states.slice(0, 8).map((s, i) => (
                 <div key={s.name}>
                   <div className="flex justify-between text-sm"><span>{s.name} <span className="text-muted-foreground">· {s.qtd} vendas</span></span><span>{((s.receita / total) * 100).toFixed(1)}%</span></div>
-                  <div className="mt-1 h-1.5 rounded bg-muted"><div className="h-full rounded" style={{ width: `${(s.receita / states[0].receita) * 100}%`, background: COLORS[i % 5] }} /></div>
+                  <div className="mt-1 h-1.5 rounded bg-muted"><div className="h-full rounded" style={{ width: `${(s.receita / (states[0]?.receita ?? 1)) * 100}%`, background: COLORS[i % 5] }} /></div>
                 </div>
               ))}
             </div>
@@ -134,7 +134,7 @@ function Dashboard() {
         </Panel>
 
         <Panel n="03" q="Qual é a forma de pagamento preferida e como ela impacta o valor da venda?"
-          a={pays[0] ? `${pays[0].name} é a preferida (${((pays[0].qtd / rows.length) * 100).toFixed(0)}% das vendas). Maior ticket: ${[...pays].sort((a, b) => b.ticket - a.ticket)[0].name}.` : "Sem dados."}>
+          a={pays[0] ? `${pays[0].name} é a preferida (${((pays[0].qtd / rows.length) * 100).toFixed(0)}% das vendas). Maior ticket: ${[...pays].sort((a, b) => b.ticket - a.ticket)[0]?.name}.` : "Sem dados."}>
           <div className="grid gap-6 lg:grid-cols-2">
             <div className="h-[340px]">
               <ResponsiveContainer>
