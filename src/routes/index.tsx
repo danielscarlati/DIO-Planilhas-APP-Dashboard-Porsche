@@ -5,8 +5,11 @@ import {
 } from "recharts";
 import sales from "@/data/sales.json";
 import hero from "@/assets/hero-911.jpg";
+import { Button } from "@/components/ui/button";
+import { filterBySaleYear, saleYear } from "@/lib/sale-year";
 
 type Sale = {
+  SaleDateSanitized: string;
   PorscheModelSanitized: string;
   ModelYearSanitized: number;
   SalesPriceSanitized: number;
@@ -33,7 +36,8 @@ export const Route = createFileRoute("/")({
 const COLORS = ["var(--p-red)", "var(--p-gold)", "var(--p-blue)", "var(--p-green)", "var(--p-yellow)", "var(--muted-foreground)", "var(--foreground)"];
 const usd = (n: number) => n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
 const usdK = (n: number) => (n >= 1e6 ? `$${(n / 1e6).toFixed(1)}M` : `$${Math.round(n / 1e3)}k`);
-const years = [...new Set(data.map((d) => d.ModelYearSanitized))].sort();
+const years = [...new Set(data.map((d) => saleYear(d.SaleDateSanitized)).filter((y): y is number => y !== null))].sort((a, b) => a - b);
+const invalidDates = data.filter((d) => saleYear(d.SaleDateSanitized) === null).length;
 
 function group(rows: Sale[], key: keyof Sale) {
   const m = new Map<string, { name: string; receita: number; qtd: number }>();
@@ -49,7 +53,7 @@ const tip = { contentStyle: { background: "var(--card)", border: "1px solid var(
 
 function Dashboard() {
   const [year, setYear] = useState<number | "all">("all");
-  const rows = useMemo(() => (year === "all" ? data : data.filter((d) => d.ModelYearSanitized === year)), [year]);
+  const rows = useMemo(() => filterBySaleYear(data, year), [year]);
   const total = rows.reduce((s, r) => s + r.SalesPriceSanitized, 0);
   const models = group(rows, "PorscheModelSanitized");
   const states = group(rows, "StateSanitized");
@@ -70,13 +74,14 @@ function Dashboard() {
 
       <main className="mx-auto max-w-7xl space-y-10 px-6 py-10">
         <section className="flex flex-wrap items-center gap-2">
-          <span className="eyebrow mr-2">Ano do modelo</span>
+          <span className="eyebrow mr-2">Ano da venda</span>
           {(["all", ...years] as const).map((y) => (
-            <button key={y} onClick={() => setYear(y)}
+            <Button variant="outline" key={y} onClick={() => setYear(y)} aria-pressed={year === y}
               className={`rounded border px-4 py-2 text-sm transition-colors ${year === y ? "border-primary bg-primary text-primary-foreground" : "border-border bg-surface text-muted-foreground hover:border-foreground hover:text-foreground"}`}>
               {y === "all" ? "Todos" : y}
-            </button>
+            </Button>
           ))}
+          <p className="w-full mt-2 text-xs text-muted-foreground">{invalidDates} vendas com data inválida: incluídas em “Todos”, excluídas ao selecionar um ano.</p>
         </section>
 
         <section className="grid gap-4 md:grid-cols-3">

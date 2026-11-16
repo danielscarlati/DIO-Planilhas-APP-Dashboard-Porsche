@@ -28,3 +28,5 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+- Keep sale-date validation and year filtering in a shared browser-safe helper so the dashboard and its regression tests use the same logic.
