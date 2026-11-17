@@ -70,6 +70,8 @@
   --color-p-blue: var(--p-blue);
   --color-p-green: var(--p-green);
   --color-p-yellow: var(--p-yellow);
+  --color-p-copper: var(--p-copper);
+  --color-p-violet: var(--p-violet);
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -107,6 +109,8 @@
   --p-blue: oklch(0.55 0.15 255);
   --p-green: oklch(0.62 0.14 155);
   --p-yellow: oklch(0.86 0.16 95);
+  --p-copper: oklch(0.66 0.15 55);
+  --p-violet: oklch(0.6 0.18 310);
   --chart-1: var(--p-red);
   --chart-2: var(--p-gold);
   --chart-3: var(--p-blue);

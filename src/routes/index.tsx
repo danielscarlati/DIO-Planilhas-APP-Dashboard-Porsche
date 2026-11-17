@@ -34,6 +34,8 @@ export const Route = createFileRoute("/")({
 });
 
 const COLORS = ["var(--p-red)", "var(--p-gold)", "var(--p-blue)", "var(--p-green)", "var(--p-yellow)", "var(--muted-foreground)", "var(--foreground)"];
+const PAY_COLORS: Record<string, string> = { Financing: "var(--p-copper)", Lease: "var(--p-violet)" };
+const payColor = (name: string, i: number) => PAY_COLORS[name] ?? COLORS[i % COLORS.length];
 const usd = (n: number) => n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
 const usdK = (n: number) => (n >= 1e6 ? `$${(n / 1e6).toFixed(1)}M` : `$${Math.round(n / 1e3)}k`);
 const years = [...new Set(data.map((d) => saleYear(d.SaleDateSanitized)).filter((y): y is number => y !== null))].sort((a, b) => a - b);
@@ -146,14 +148,14 @@ function Dashboard() {
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie data={pays} dataKey="qtd" nameKey="name" innerRadius={75} outerRadius={125} paddingAngle={2} stroke="var(--background)">
-                    {pays.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
+                    {pays.map((p, i) => <Cell key={i} fill={payColor(p.name, i)} />)}
                   </Pie>
                   <Tooltip {...tip} formatter={(v: number) => `${v} vendas (${((v / rows.length) * 100).toFixed(0)}%)`} />
                 </PieChart>
               </ResponsiveContainer>
               </div>
               <div className="flex flex-wrap justify-center gap-3 text-xs text-muted-foreground">
-                {pays.map((p, i) => <span key={p.name} className="flex items-center gap-1 whitespace-nowrap"><span className="h-2 w-2 shrink-0 rounded-full" style={{ background: COLORS[i % COLORS.length] }} />{p.name}</span>)}
+                {pays.map((p, i) => <span key={p.name} className="flex items-center gap-1 whitespace-nowrap"><span className="h-2 w-2 shrink-0 rounded-full" style={{ background: payColor(p.name, i) }} />{p.name}</span>)}
               </div>
             </div>
             <div className="h-[340px]">
@@ -163,7 +165,9 @@ function Dashboard() {
                   <XAxis type="number" tickFormatter={usdK} stroke="var(--muted-foreground)" fontSize={12} />
                   <YAxis type="category" dataKey="name" interval={0} width={120} stroke="var(--muted-foreground)" fontSize={12} />
                   <Tooltip {...tip} formatter={(v: number) => usd(v)} />
-                  <Bar dataKey="ticket" name="Ticket médio" fill="var(--p-gold)" radius={[0, 3, 3, 0]} />
+                  <Bar dataKey="ticket" name="Ticket médio" radius={[0, 3, 3, 0]}>
+                    {[...pays].sort((a, b) => b.ticket - a.ticket).map((p, i) => <Cell key={i} fill={payColor(p.name, pays.indexOf(p))} />)}
+                  </Bar>
                 </BarChart>
               </ResponsiveContainer>
             </div>
