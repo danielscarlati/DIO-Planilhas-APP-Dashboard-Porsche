@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { ChevronLeft, ChevronRight, Filter, RotateCcw, BarChart3, Wallet, CarFront, TrendingUp } from "lucide-react";
 import {
   Bar, BarChart, CartesianGrid, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis,
 } from "recharts";
@@ -33,7 +34,7 @@ export const Route = createFileRoute("/")({
   component: Dashboard,
 });
 
-const COLORS = ["var(--p-red)", "var(--p-gold)", "var(--p-blue)", "var(--p-green)", "var(--p-yellow)", "var(--muted-foreground)", "var(--foreground)"];
+const COLORS = ["var(--p-blue)", "var(--p-green)", "var(--p-gold)", "var(--p-red)", "var(--p-yellow)", "var(--p-steel)", "var(--p-cyan)"];
 const PAY_COLORS: Record<string, string> = { Financing: "var(--p-copper)", Lease: "var(--p-violet)" };
 const payColor = (name: string, i: number) => PAY_COLORS[name] ?? COLORS[i % COLORS.length];
 const usd = (n: number) => n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
@@ -55,6 +56,7 @@ const tip = { contentStyle: { background: "var(--card)", border: "1px solid var(
 
 function Dashboard() {
   const [year, setYear] = useState<number | "all">("all");
+  const [filtersOpen, setFiltersOpen] = useState(true);
   const rows = useMemo(() => filterBySaleYear(data, year), [year]);
   const total = rows.reduce((s, r) => s + r.SalesPriceSanitized, 0);
   const models = group(rows, "PorscheModelSanitized");
@@ -64,38 +66,56 @@ function Dashboard() {
 
   return (
     <div className="min-h-screen bg-background font-sans text-foreground">
-      <header className="relative overflow-hidden border-b border-border">
-        <img src={hero} alt="Porsche 911 em estúdio" width={1920} height={768} className="absolute inset-0 h-full w-full object-cover object-right opacity-80" />
-        <div className="absolute inset-0 bg-hero-fade" />
-        <div className="relative mx-auto max-w-7xl px-6 py-16 md:py-24">
-          <p className="eyebrow tracking-[0.5em]">PORSCHE</p>
-          <h1 className="mt-4 max-w-xl text-4xl font-semibold leading-tight md:text-6xl">Painel de Vendas</h1>
-          <p className="mt-3 max-w-md text-muted-foreground">Desempenho por modelo, região e forma de pagamento.</p>
+      <header className="border-b border-border bg-card">
+        <div className="flex min-h-24 items-center justify-between gap-4 px-4 py-4 md:px-7">
+          <div className="min-w-0">
+            <p className="text-sm font-semibold">PORSCHE <span className="ml-2 border-l border-border pl-3 font-normal text-muted-foreground">Sales Analytics</span></p>
+            <h1 className="mt-1 text-2xl font-semibold">Painel de Vendas</h1>
+          </div>
+          <img src={hero} alt="Porsche 911 em estúdio" width={1920} height={768} className="hidden h-16 w-44 rounded object-cover object-right sm:block" />
         </div>
       </header>
 
-      <main className="mx-auto max-w-7xl space-y-10 px-6 py-10">
-        <section className="flex flex-wrap items-center gap-2">
-          <span className="eyebrow mr-2">Ano da venda</span>
-          {(["all", ...years] as const).map((y) => (
-            <Button variant="outline" key={y} onClick={() => setYear(y)} aria-pressed={year === y}
-              className={`rounded border px-4 py-2 text-sm transition-colors ${year === y ? "border-primary bg-primary text-primary-foreground" : "border-border bg-surface text-muted-foreground hover:border-foreground hover:text-foreground"}`}>
-              {y === "all" ? "Todos" : y}
+      <div className="flex min-h-[calc(100vh-97px)] flex-col md:flex-row">
+        <aside className={`shrink-0 border-b border-border bg-sidebar md:border-r md:border-b-0 ${filtersOpen ? "md:w-60" : "md:w-14"}`}>
+          <div className="flex h-14 items-center justify-between px-2">
+            {filtersOpen && <span className="flex items-center gap-2 pl-2 text-sm font-semibold"><Filter className="size-4 text-primary" />Filtros</span>}
+            <Button variant="ghost" size="icon" onClick={() => setFiltersOpen(!filtersOpen)} aria-expanded={filtersOpen} aria-controls="year-filters" aria-label={filtersOpen ? "Recolher filtros" : "Expandir filtros"} title={filtersOpen ? "Recolher filtros" : "Expandir filtros"}>
+              {filtersOpen ? <ChevronLeft /> : <ChevronRight />}
             </Button>
-          ))}
-          <p className="w-full mt-2 text-xs text-muted-foreground">{invalidDates} vendas com data inválida: incluídas em “Todos”, excluídas ao selecionar um ano.</p>
-        </section>
+          </div>
+          {filtersOpen && <div id="year-filters" className="border-t border-border p-4">
+            <div className="mb-3 flex items-center justify-between">
+              <span className="text-xs font-semibold">Ano da venda</span>
+              <Button variant="ghost" size="icon" onClick={() => setYear("all")} disabled={year === "all"} aria-label="Limpar filtro de ano" title="Limpar filtro de ano"><RotateCcw className="size-3.5" /></Button>
+            </div>
+            <div className="grid grid-cols-3 gap-2 md:grid-cols-1">
+              {(["all", ...years] as const).map((y) => (
+                <Button variant={year === y ? "default" : "outline"} key={y} onClick={() => setYear(y)} aria-pressed={year === y} className="justify-start rounded px-3 shadow-none">
+                  <span className={`size-3 shrink-0 rounded-sm border ${year === y ? "border-primary-foreground bg-primary-foreground" : "border-input"}`} />
+                  {y === "all" ? "Todos" : y}
+                </Button>
+              ))}
+            </div>
+            <p className="mt-5 text-xs leading-relaxed text-muted-foreground">{invalidDates} vendas com data inválida: incluídas em “Todos”, excluídas ao selecionar um ano.</p>
+          </div>}
+        </aside>
+      <main className="min-w-0 flex-1 space-y-7 px-4 py-5 md:px-6">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border pb-3">
+          <span className="flex items-center gap-2 text-sm font-semibold"><BarChart3 className="size-4 text-primary" />Visão geral</span>
+          <span className="text-xs text-muted-foreground">Ano da venda: <strong className="font-semibold text-foreground">{year === "all" ? "Todos" : year}</strong> · {rows.length.toLocaleString("pt-BR")} vendas</span>
+        </div>
 
         <section className="grid gap-4 md:grid-cols-3">
-          <Kpi label="Faturamento total" value={usd(total)} accent="bg-p-red" />
-          <Kpi label="Veículos vendidos" value={String(rows.length)} accent="bg-p-gold" />
-          <Kpi label="Ticket médio geral" value={usd(rows.length ? total / rows.length : 0)} accent="bg-p-blue" />
+          <Kpi label="Faturamento total" value={usd(total)} icon={<Wallet className="size-5 text-p-blue" />} />
+          <Kpi label="Veículos vendidos" value={String(rows.length)} icon={<CarFront className="size-5 text-p-green" />} />
+          <Kpi label="Ticket médio geral" value={usd(rows.length ? total / rows.length : 0)} icon={<TrendingUp className="size-5 text-p-gold" />} />
         </section>
 
         <Panel n="01" q="Qual modelo gera a maior receita e qual tem o maior ticket médio?"
           a={models[0] && topTicket ? `${models[0].name} lidera em receita (${usd(models[0].receita)}); ${topTicket.name} tem o maior ticket médio (${usd(topTicket.ticket)}).` : "Sem dados."}>
           <div className="grid gap-6 lg:grid-cols-3">
-            <div className="h-[420px] lg:col-span-2">
+            <div className="chart-frame h-[420px] lg:col-span-2">
               <ResponsiveContainer>
                 <BarChart data={models.slice(0, 10)} layout="vertical" margin={{ left: 30 }}>
                   <CartesianGrid horizontal={false} stroke="var(--border)" />
@@ -103,7 +123,7 @@ function Dashboard() {
                   <YAxis type="category" dataKey="name" interval={0} width={120} stroke="var(--muted-foreground)" fontSize={12} />
                   <Tooltip {...tip} formatter={(v: number) => usd(v)} />
                   <Bar dataKey="receita" name="Receita" radius={[0, 3, 3, 0]}>
-                    {models.slice(0, 10).map((_, i) => <Cell key={i} fill={i === 0 ? "var(--p-red)" : "var(--muted-foreground)"} />)}
+                    {models.slice(0, 10).map((_, i) => <Cell key={i} fill={i === 0 ? "var(--p-blue)" : "var(--p-steel)"} />)}
                   </Bar>
                 </BarChart>
               </ResponsiveContainer>
@@ -115,7 +135,7 @@ function Dashboard() {
         <Panel n="02" q="Onde estão os clientes mais rentáveis (por estado)?"
           a={states[0] ? `${states[0].name} concentra ${((states[0].receita / total) * 100).toFixed(1)}% da receita. Top 5 estados somam ${((states.slice(0, 5).reduce((s, x) => s + x.receita, 0) / total) * 100).toFixed(1)}%.` : "Sem dados."}>
           <div className="grid gap-6 lg:grid-cols-3">
-            <div className="h-[340px] lg:col-span-2">
+            <div className="chart-frame h-[340px] lg:col-span-2">
               <ResponsiveContainer>
                 <BarChart data={states.slice(0, 5)}>
                   <CartesianGrid vertical={false} stroke="var(--border)" />
@@ -128,7 +148,7 @@ function Dashboard() {
                 </BarChart>
               </ResponsiveContainer>
             </div>
-            <div className="space-y-3">
+            <div className="chart-frame space-y-3">
               <p className="eyebrow">Participação na receita</p>
               {states.slice(0, 8).map((s, i) => (
                 <div key={s.name}>
@@ -143,7 +163,7 @@ function Dashboard() {
         <Panel n="03" q="Qual é a forma de pagamento preferida e como ela impacta o valor da venda?"
           a={pays[0] ? `${pays[0].name} é a preferida (${((pays[0].qtd / rows.length) * 100).toFixed(0)}% das vendas). Maior ticket: ${[...pays].sort((a, b) => b.ticket - a.ticket)[0]?.name}.` : "Sem dados."}>
           <div className="grid gap-6 lg:grid-cols-2">
-            <div className="min-w-0 space-y-4">
+            <div className="chart-frame min-w-0 space-y-4">
               <div className="h-[340px]">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -158,7 +178,7 @@ function Dashboard() {
                 {pays.map((p, i) => <span key={p.name} className="flex items-center gap-1 whitespace-nowrap"><span className="h-2 w-2 shrink-0 rounded-full" style={{ background: payColor(p.name, i) }} />{p.name}</span>)}
               </div>
             </div>
-            <div className="h-[340px]">
+            <div className="chart-frame h-[400px]">
               <ResponsiveContainer>
                 <BarChart data={[...pays].sort((a, b) => b.ticket - a.ticket)} layout="vertical" margin={{ left: 20 }}>
                   <CartesianGrid horizontal={false} stroke="var(--border)" />
@@ -175,26 +195,25 @@ function Dashboard() {
         </Panel>
         <p className="pb-6 text-xs text-muted-foreground">Fonte: bancoDadosPorsche.xlsx · apenas colunas sanitizadas.</p>
       </main>
+      </div>
     </div>
   );
 }
 
-function Kpi({ label, value, accent }: { label: string; value: string; accent: string }) {
+function Kpi({ label, value, icon }: { label: string; value: string; icon: React.ReactNode }) {
   return (
-    <div className="relative overflow-hidden rounded border border-border bg-surface p-6">
-      <span className={`absolute left-0 top-0 h-full w-1 ${accent}`} />
-      <p className="eyebrow">{label}</p>
-      <p className="mt-3 text-3xl font-semibold">{value}</p>
+    <div className="min-w-0 rounded border border-border bg-surface px-5 py-4">
+      <div className="flex items-center justify-between gap-2"><p className="text-xs font-medium text-muted-foreground">{label}</p>{icon}</div>
+      <p className="mt-3 break-words text-2xl font-semibold tabular-nums">{value}</p>
     </div>
   );
 }
 
 function Panel({ n, q, a, children }: { n: string; q: string; a: string; children: React.ReactNode }) {
   return (
-    <section className="rounded border border-border bg-surface p-6 md:p-8">
-      <p className="eyebrow text-accent">Pergunta {n}</p>
-      <h2 className="mt-2 text-xl font-medium md:text-2xl">{q}</h2>
-      <p className="mt-2 mb-6 text-sm text-muted-foreground">{a}</p>
+    <section>
+      <div className="flex items-start gap-3"><span className="border-l-2 border-primary pl-2 text-sm font-semibold text-primary">{n}</span><h2 className="text-base font-semibold">{q}</h2></div>
+      <p className="mt-2 mb-4 text-sm leading-relaxed text-muted-foreground">{a}</p>
       {children}
     </section>
   );
@@ -202,7 +221,7 @@ function Panel({ n, q, a, children }: { n: string; q: string; a: string; childre
 
 function Table({ rows }: { rows: { name: string; receita: number; qtd: number; ticket: number }[] }) {
   return (
-    <div className="overflow-auto text-sm">
+    <div className="chart-frame max-h-[420px] overflow-auto text-sm">
       <table className="w-full">
         <thead><tr className="eyebrow text-left"><th className="pb-2">Modelo</th><th className="pb-2 text-right">Un.</th><th className="pb-2 text-right">Ticket</th></tr></thead>
         <tbody>{rows.map((r) => (

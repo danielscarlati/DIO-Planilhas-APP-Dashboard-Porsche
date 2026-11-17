@@ -30,3 +30,4 @@ use the editor.
 <!-- LOVABLE:END -->
 
 - Keep sale-date validation and year filtering in a shared browser-safe helper so the dashboard and its regression tests use the same logic.
+- Keep filter-panel visibility separate from the selected sale year so collapsing the panel never resets the report's data selection.

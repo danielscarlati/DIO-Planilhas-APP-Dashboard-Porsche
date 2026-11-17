@@ -62,8 +62,8 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
-  --font-display: "Saira", system-ui, sans-serif;
-  --font-sans: "Saira", system-ui, sans-serif;
+  --font-display: "Segoe UI", "Arial", sans-serif;
+  --font-sans: "Segoe UI", "Arial", sans-serif;
   --color-surface: var(--surface);
   --color-p-red: var(--p-red);
   --color-p-gold: var(--p-gold);
@@ -72,6 +72,8 @@
   --color-p-yellow: var(--p-yellow);
   --color-p-copper: var(--p-copper);
   --color-p-violet: var(--p-violet);
+  --color-p-steel: var(--p-steel);
+  --color-p-cyan: var(--p-cyan);
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -84,31 +86,33 @@
 
 :root {
   --radius: 0.25rem;
-  --background: oklch(0.13 0.004 260);
-  --foreground: oklch(0.97 0.003 260);
-  --surface: oklch(0.19 0.006 260);
-  --card: oklch(0.19 0.006 260);
-  --card-foreground: oklch(0.97 0.003 260);
-  --popover: oklch(0.19 0.006 260);
-  --popover-foreground: oklch(0.97 0.003 260);
-  --primary: oklch(0.55 0.21 27);
+  --background: oklch(0.975 0.002 260);
+  --foreground: oklch(0.28 0.008 260);
+  --surface: oklch(0.935 0.003 260);
+  --card: oklch(1 0 0);
+  --card-foreground: var(--foreground);
+  --popover: var(--card);
+  --popover-foreground: var(--foreground);
+  --primary: oklch(0.48 0.13 250);
   --primary-foreground: oklch(0.98 0 0);
-  --secondary: oklch(0.25 0.008 260);
-  --secondary-foreground: oklch(0.97 0.003 260);
-  --muted: oklch(0.25 0.008 260);
-  --muted-foreground: oklch(0.68 0.01 260);
-  --accent: oklch(0.76 0.11 80);
-  --accent-foreground: oklch(0.15 0 0);
+  --secondary: oklch(0.94 0.003 260);
+  --secondary-foreground: var(--foreground);
+  --muted: oklch(0.955 0.003 260);
+  --muted-foreground: oklch(0.49 0.012 260);
+  --accent: oklch(0.93 0.02 250);
+  --accent-foreground: var(--primary);
   --destructive: oklch(0.6 0.22 27);
   --destructive-foreground: oklch(0.98 0 0);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.76 0.11 80);
+  --border: oklch(0.86 0.005 260);
+  --input: oklch(0.78 0.008 260);
+  --ring: var(--primary);
   --p-red: oklch(0.55 0.21 27);
-  --p-gold: oklch(0.76 0.11 80);
-  --p-blue: oklch(0.55 0.15 255);
-  --p-green: oklch(0.62 0.14 155);
-  --p-yellow: oklch(0.86 0.16 95);
+  --p-gold: oklch(0.68 0.12 85);
+  --p-blue: oklch(0.52 0.13 250);
+  --p-green: oklch(0.58 0.10 175);
+  --p-yellow: oklch(0.8 0.15 105);
+  --p-steel: oklch(0.68 0.05 245);
+  --p-cyan: oklch(0.72 0.11 210);
   --p-copper: oklch(0.66 0.15 55);
   --p-violet: oklch(0.6 0.18 310);
   --chart-1: var(--p-red);
@@ -117,17 +121,18 @@
   --chart-4: var(--p-green);
   --chart-5: var(--p-yellow);
   --gradient-hero: linear-gradient(120deg, oklch(0.1 0 0) 0%, oklch(0.1 0 0 / 70%) 45%, transparent 100%);
-  --sidebar: oklch(0.19 0.006 260);
-  --sidebar-foreground: oklch(0.97 0.003 260);
-  --sidebar-primary: oklch(0.55 0.21 27);
+  --sidebar: oklch(0.96 0.003 260);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
   --sidebar-primary-foreground: oklch(0.98 0 0);
-  --sidebar-accent: oklch(0.25 0.008 260);
-  --sidebar-accent-foreground: oklch(0.97 0.003 260);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.76 0.11 80);
+  --sidebar-accent: var(--accent);
+  --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
 }
 
 .dark {
+  --surface: oklch(0.25 0.008 260);
   --background: oklch(0.129 0.042 264.695);
   --foreground: oklch(0.984 0.003 247.858);
   --card: oklch(0.208 0.042 265.755);
@@ -174,4 +179,14 @@
 }
 
 @utility bg-hero-fade { background: var(--gradient-hero); }
-@utility eyebrow { font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--muted-foreground); }
+@utility eyebrow { font-size: 0.7rem; letter-spacing: 0; text-transform: uppercase; color: var(--muted-foreground); }
+
+@utility chart-frame {
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--card);
+  padding: 16px;
+}
+
+body { letter-spacing: 0; }
