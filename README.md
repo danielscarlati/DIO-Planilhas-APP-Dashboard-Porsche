@@ -1,27 +1,44 @@
-# DIO-Planilhas-APP-Dashboard-Porsche
+# Dashboard Executivo de Vendas Porsche
 
-Crie um dashboard da Porsche, usando a planilha do Excel chamada de bancoDadosPorsche.xlsx. Siga as seguintes instruções:
-1. Precisa ter as perguntas de negócio respondidas e indicadores de topo. As instruções para isso estão no arquivo prompt-PerguntasDeNegocio.md. Também precisa ter filtros que deixem recortar os dados, no meu caso, eu quero filtrar os dados só por ano.
-2. Quero que você só use as colunas que terminam com "Sanitized", ou seja, as colunas que foram sanitizadas com a limpeza dos dados.
-3. O visual precisa ser coerente, com o design da Porsche (segue o link: https://designsystem.porsche.com/v3/) e com uma paleta de cores rica.
+Dashboard executivo para explorar as vendas Porsche por modelo, forma de pagamento e localização, com indicadores de faturamento, quantidade de veículos vendidos e ticket médio.
 
-This project was built with [Lovable](https://lovable.dev).
+Este trabalho foi feito pelo **Lovable**.
 
-## Build with Lovable
+## Perguntas de negócio e prompts
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/805cdd86-0801-4297-a60a-5ad0a0edfdfe).
+As perguntas de negócio escolhidas para orientar a análise estão em [`docs/prompts/prompt-PerguntasDeNegocio.md`](docs/prompts/prompt-PerguntasDeNegocio.md). O prompt utilizado para criar o dashboard está em [`docs/prompts/prompt-Dashboard.md`](docs/prompts/prompt-Dashboard.md).
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+## Dados e metodologia
 
-## Development
+Não foi necessário fazer tratamento dos dados. Para a análise no dashboard, pedi à IA que utilizasse somente as colunas sanitizadas da planilha. Na própria planilha, criei tabelas dinâmicas para responder a cada pergunta de negócio.
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+A planilha original está em [`docs/bancoDadosPorsche.xlsx`](docs/bancoDadosPorsche.xlsx), e os dados usados pela aplicação estão em [`src/data/sales.json`](src/data/sales.json). O filtro do dashboard considera o ano da venda; registros com data inválida ou não preenchida permanecem na opção **Todos**.
 
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
+## Funcionalidades
+
+- Indicadores de faturamento total, veículos vendidos e ticket médio.
+- Filtro retrátil por ano da venda.
+- Análises de faturamento e ticket médio por modelo e forma de pagamento.
+- Ranking geográfico de vendas.
+- Layout responsivo, com gráficos interativos e valores em dólares americanos (USD).
+
+## Executar localmente
+
+É necessário ter [Bun](https://bun.sh/) instalado.
+
+```bash
+bun install
+bun run dev
 ```
+
+Para validar o projeto:
+
+```bash
+bun run lint
+bun run test
+bun run build
+```
+
+## Endereço da dashboard
+
+[Porsche - Valor de Vendas](https://porsche-business-pulse.lovable.app)
