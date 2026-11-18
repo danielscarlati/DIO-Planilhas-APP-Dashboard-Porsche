@@ -1,4 +1,4 @@
 - [x] Aplicar cartões de indicadores cinza-claros e paleta corporativa.
 - [x] Mover filtro de ano da venda para painel lateral retrátil.
 - [x] Aplicar bordas suaves aos gráficos e preservar perguntas de negócio.
-- [ ] Conferir seleção de ano e painel retrátil no computador e no celular.
+- [x] Conferir seleção de ano e painel retrátil no computador e no celular.
