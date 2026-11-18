@@ -34,7 +34,7 @@ export const Route = createFileRoute("/")({
   component: Dashboard,
 });
 
-const COLORS = ["var(--p-blue)", "var(--p-green)", "var(--p-gold)", "var(--p-red)", "var(--p-yellow)", "var(--p-steel)", "var(--p-cyan)"];
+const COLORS = ["var(--p-red)", "var(--p-blue)", "var(--p-gold)", "var(--p-green)", "var(--p-yellow)", "var(--p-steel)", "var(--p-cyan)"];
 const PAY_COLORS: Record<string, string> = { Financing: "var(--p-copper)", Lease: "var(--p-violet)" };
 const payColor = (name: string, i: number) => PAY_COLORS[name] ?? COLORS[i % COLORS.length];
 const usd = (n: number) => n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
@@ -66,17 +66,20 @@ function Dashboard() {
 
   return (
     <div className="min-h-screen bg-background font-sans text-foreground">
-      <header className="border-b border-border bg-card">
-        <div className="flex min-h-24 items-center justify-between gap-4 px-4 py-4 md:px-7">
+      <header className="relative overflow-hidden border-b border-border bg-brand-header text-brand-header-foreground">
+        <img src={hero} alt="Porsche 911 em estúdio" width={1920} height={768} className="porsche-header-image absolute inset-0 h-full w-full object-cover object-right" />
+        <div className="absolute inset-0 bg-hero-fade" />
+        <div className="relative flex min-h-48 items-center px-5 py-7 md:px-8">
           <div className="min-w-0">
-            <p className="text-sm font-semibold">PORSCHE <span className="ml-2 border-l border-border pl-3 font-normal text-muted-foreground">Sales Analytics</span></p>
-            <h1 className="mt-1 text-2xl font-semibold">Painel de Vendas</h1>
+            <p className="font-display text-3xl font-semibold">PORSCHE</p>
+            <div className="mt-3 h-0.5 w-10 bg-p-red" />
+            <h1 className="mt-3 font-display text-2xl font-normal">Painel de Vendas</h1>
+            <p className="mt-1 text-sm text-brand-header-muted">Sales Analytics</p>
           </div>
-          <img src={hero} alt="Porsche 911 em estúdio" width={1920} height={768} className="hidden h-16 w-44 rounded object-cover object-right sm:block" />
         </div>
       </header>
 
-      <div className="flex min-h-[calc(100vh-97px)] flex-col md:flex-row">
+      <div className="flex min-h-[calc(100vh-192px)] flex-col md:flex-row">
         <aside className={`shrink-0 border-b border-border bg-sidebar md:border-r md:border-b-0 ${filtersOpen ? "md:w-60" : "md:w-14"}`}>
           <div className="flex h-14 items-center justify-between px-2">
             {filtersOpen && <span className="flex items-center gap-2 pl-2 text-sm font-semibold"><Filter className="size-4 text-primary" />Filtros</span>}
@@ -107,7 +110,7 @@ function Dashboard() {
         </div>
 
         <section className="grid gap-4 md:grid-cols-3">
-          <Kpi label="Faturamento total" value={usd(total)} icon={<Wallet className="size-5 text-p-blue" />} />
+          <Kpi label="Faturamento total" value={usd(total)} icon={<Wallet className="size-5 text-p-red" />} />
           <Kpi label="Veículos vendidos" value={String(rows.length)} icon={<CarFront className="size-5 text-p-green" />} />
           <Kpi label="Ticket médio geral" value={usd(rows.length ? total / rows.length : 0)} icon={<TrendingUp className="size-5 text-p-gold" />} />
         </section>
@@ -123,7 +126,7 @@ function Dashboard() {
                   <YAxis type="category" dataKey="name" interval={0} width={120} stroke="var(--muted-foreground)" fontSize={12} />
                   <Tooltip {...tip} formatter={(v: number) => usd(v)} />
                   <Bar dataKey="receita" name="Receita" radius={[0, 3, 3, 0]}>
-                    {models.slice(0, 10).map((_, i) => <Cell key={i} fill={i === 0 ? "var(--p-blue)" : "var(--p-steel)"} />)}
+                    {models.slice(0, 10).map((_, i) => <Cell key={i} fill={i === 0 ? "var(--p-red)" : "var(--p-steel)"} />)}
                   </Bar>
                 </BarChart>
               </ResponsiveContainer>
@@ -204,7 +207,7 @@ function Kpi({ label, value, icon }: { label: string; value: string; icon: React
   return (
     <div className="min-w-0 rounded border border-border bg-surface px-5 py-4">
       <div className="flex items-center justify-between gap-2"><p className="text-xs font-medium text-muted-foreground">{label}</p>{icon}</div>
-      <p className="mt-3 break-words text-2xl font-semibold tabular-nums">{value}</p>
+      <p className="mt-3 break-words font-display text-3xl font-semibold tabular-nums">{value}</p>
     </div>
   );
 }
@@ -212,7 +215,7 @@ function Kpi({ label, value, icon }: { label: string; value: string; icon: React
 function Panel({ n, q, a, children }: { n: string; q: string; a: string; children: React.ReactNode }) {
   return (
     <section>
-      <div className="flex items-start gap-3"><span className="border-l-2 border-primary pl-2 text-sm font-semibold text-primary">{n}</span><h2 className="text-base font-semibold">{q}</h2></div>
+      <div className="flex items-start gap-3"><span className="border-l-2 border-p-red pl-2 text-sm font-semibold text-p-red">{n}</span><h2 className="font-display text-lg font-semibold">{q}</h2></div>
       <p className="mt-2 mb-4 text-sm leading-relaxed text-muted-foreground">{a}</p>
       {children}
     </section>

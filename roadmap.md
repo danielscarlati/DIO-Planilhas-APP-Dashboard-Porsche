@@ -2,3 +2,5 @@
 - [x] Mover filtro de ano da venda para painel lateral retrátil.
 - [x] Aplicar bordas suaves aos gráficos e preservar perguntas de negócio.
 - [x] Conferir seleção de ano e painel retrátil no computador e no celular.
+- [x] Retomar identidade Porsche, mantendo cartões cinza-claros e filtros retráteis do Power BI.
+- [x] Verificar a combinação visual e o funcionamento dos filtros.
